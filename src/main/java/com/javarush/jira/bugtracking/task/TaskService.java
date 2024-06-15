@@ -132,6 +132,18 @@ public class TaskService {
         assignment.setEndpoint(LocalDateTime.now());
     }
 
+    @Transactional
+    public boolean addTagToTask(long taskId, String tagText) {
+        boolean taskExists = handler.getRepository().existsById(taskId);
+        if (!taskExists) {
+            return false;
+        }
+        Task task = handler.getRepository().getExisted(taskId);
+        task.getTags().add(tagText);
+        handler.getRepository().save(task);
+        return true;
+    }
+
     private void checkAssignmentActionPossible(long id, String userType, boolean assign) {
         Assert.notNull(userType, "userType must not be null");
         Task task = handler.getRepository().getExisted(id);

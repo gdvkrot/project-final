@@ -151,6 +151,17 @@ public class TaskController {
         activityService.delete(id);
     }
 
+    @PostMapping("/{id}/tags")
+    public ResponseEntity<String> addTagToTask(@RequestParam long taskId, @RequestParam String tagText) {
+        if (taskService.addTagToTask(taskId, tagText)) {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("Successfully added new tag to task with id:" + taskId);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Task with id:" + taskId + " not found!");
+        }
+    }
+
     private record TaskTreeNode(TaskTo taskTo, List<TaskTreeNode> subNodes) implements ITreeNode<TaskTo, TaskTreeNode> {
         public TaskTreeNode(TaskTo taskTo) {
             this(taskTo, new LinkedList<>());
